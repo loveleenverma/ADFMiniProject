@@ -1,0 +1,70 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Send_email_(V2)": {
+                "inputs": {
+                    "body": {
+                        "Body": "<p>There is a column Mismatch in<br>\n<br>\nDatafactory: @{triggerBody()?['datafactory_name']}<br>\nPipeline: @{triggerBody()?['Pipeline_name']}<br>\nRun Id: @{triggerBody()?['run_id']}<br>\nError Message: @{triggerBody()?['Error_message']}<br>\n</p>",
+                        "Subject": "Pipeline Fail",
+                        "To": "loveleenverma73@gmail.com"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['gmail']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/v2/Mail"
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "method": "POST",
+                    "schema": {
+                        "properties": {
+                            "Error_message": {
+                                "type": "string"
+                            },
+                            "Pipeline_name": {
+                                "type": "string"
+                            },
+                            "datafactory_name": {
+                                "type": "string"
+                            },
+                            "run_id": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "gmail": {
+                    "connectionId": "/subscriptions/e12181cc-fae9-4c4b-9056-326f93276d19/resourceGroups/LoveleenPOC/providers/Microsoft.Web/connections/gmail",
+                    "connectionName": "gmail",
+                    "id": "/subscriptions/e12181cc-fae9-4c4b-9056-326f93276d19/providers/Microsoft.Web/locations/southindia/managedApis/gmail"
+                }
+            }
+        }
+    }
+}
